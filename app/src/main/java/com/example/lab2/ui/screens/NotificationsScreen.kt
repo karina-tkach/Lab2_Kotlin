@@ -63,7 +63,7 @@ fun NotificationsScreen(
             val listToShow = if (showFull) notifications else notifications.take(3)
 
             LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(listToShow) { notification ->
@@ -79,7 +79,6 @@ fun NotificationItem(notification: Notification) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            //.clickable { /* тут можна відкрити деталі */ }
             .padding(4.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
