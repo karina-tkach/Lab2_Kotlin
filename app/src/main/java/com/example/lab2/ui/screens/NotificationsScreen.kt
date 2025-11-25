@@ -2,6 +2,7 @@ package com.example.lab2.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,7 +47,7 @@ fun NotificationsScreen(
     ) {
         Text("Notifications", modifier = Modifier.padding(bottom = 16.dp))
 
-        OutlinedButton(onClick = { viewModel.fetchNotifications() }) {
+        /*OutlinedButton(onClick = { viewModel.fetchNotifications() }) {
             Text("Reload List")
         }
 
@@ -53,6 +55,40 @@ fun NotificationsScreen(
 
         Button(onClick = { viewModel.toggleFullList() }) {
             Text(if (showFull) "Hide Full List" else "Show Full List")
+        }*/
+        val configuration = LocalConfiguration.current
+        val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
+
+        if (isLandscape) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(
+                    onClick = { viewModel.fetchNotifications() },
+                    modifier = Modifier.weight(1f)
+                ) { Text("Reload List") }
+
+                Button(
+                    onClick = { viewModel.toggleFullList() },
+                    modifier = Modifier.weight(1f)
+                ) { Text(if (showFull) "Hide Full List" else "Show Full List") }
+            }
+        } else {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(onClick = { viewModel.fetchNotifications() }, modifier = Modifier.fillMaxWidth()) {
+                    Text("Reload List")
+                }
+
+                Button(onClick = { viewModel.toggleFullList() }, modifier = Modifier.fillMaxWidth()) {
+                    Text(if (showFull) "Hide Full List" else "Show Full List")
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))

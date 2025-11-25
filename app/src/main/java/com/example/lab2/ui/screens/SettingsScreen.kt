@@ -16,7 +16,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -42,6 +44,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -150,9 +153,12 @@ fun SettingsAppearanceOptionsScreen(onNext: () -> Unit, onPrev: () -> Unit,
 
     val appearanceOptions by viewModel.appearanceOptions.observeAsState(emptyList())
     val showFull by viewModel.showFullList.observeAsState(false)
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
@@ -174,14 +180,44 @@ fun SettingsAppearanceOptionsScreen(onNext: () -> Unit, onPrev: () -> Unit,
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedButton(onClick = { viewModel.fetchOptions() }) {
-            Text("Reload List")
-        }
+        val configuration = LocalConfiguration.current
+        val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
 
-        Spacer(modifier = Modifier.height(8.dp))
+        if (isLandscape) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(
+                    onClick = { viewModel.fetchOptions() },
+                    modifier = Modifier.weight(1f)
+                ) { Text("Reload List") }
 
-        Button(onClick = { viewModel.toggleFullList() }) {
-            Text(if (showFull) "Hide Full List" else "Show Full List")
+                Button(
+                    onClick = { viewModel.toggleFullList() },
+                    modifier = Modifier.weight(1f)
+                ) { Text(if (showFull) "Hide Full List" else "Show Full List") }
+            }
+        } else {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(
+                    onClick = { viewModel.fetchOptions() },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Reload List")
+                }
+
+                Button(
+                    onClick = { viewModel.toggleFullList() },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(if (showFull) "Hide Full List" else "Show Full List")
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
