@@ -1,0 +1,14 @@
+[
+  { "category_name": "Work" },
+  { "category_name": "Home" },
+  { "category_name": "University" },
+  { "category_name": "Fitness" },
+  { "category_name": "Shopping" },
+  { "category_name": "Health" },
+  { "category_name": "Travel" },
+  { "category_name": "Finance" },
+  { "category_name": "Hobbies" },
+  { "category_name": "Projects" },
+  { "category_name": "Family" },
+  { "category_name": "Other" }
+]

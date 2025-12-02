@@ -1,0 +1,42 @@
+[
+  { "title": "Finish design document",              "is_done": false, "category_id": 1 },
+  { "title": "Prepare meeting presentation",        "is_done": false, "category_id": 1 },
+  { "title": "Fix production bug #237",             "is_done": true,  "category_id": 1 },
+
+  { "title": "Clean the kitchen",                   "is_done": false, "category_id": 2 },
+  { "title": "Organize wardrobe",                   "is_done": true,  "category_id": 2 },
+  { "title": "Pay electricity bill",                "is_done": false, "category_id": 2 },
+
+  { "title": "Study for math exam",                 "is_done": false, "category_id": 3 },
+  { "title": "Submit programming assignment",       "is_done": true,  "category_id": 3 },
+  { "title": "Join seminar on AI",                  "is_done": false, "category_id": 3 },
+
+  { "title": "Gym: leg day workout",                "is_done": false, "category_id": 4 },
+  { "title": "Run 5 kilometers",                    "is_done": true,  "category_id": 4 },
+  { "title": "Stretching routine",                  "is_done": false, "category_id": 4 },
+
+  { "title": "Buy fresh vegetables",                "is_done": false, "category_id": 5 },
+  { "title": "Order new shoes online",              "is_done": true,  "category_id": 5 },
+  { "title": "Get birthday gift for friend",        "is_done": false, "category_id": 5 },
+
+  { "title": "Schedule dentist appointment",        "is_done": false, "category_id": 6 },
+  { "title": "Take vitamins",                       "is_done": true,  "category_id": 6 },
+  { "title": "Start new diet plan",                 "is_done": false, "category_id": 6 },
+
+  { "title": "Book summer vacation flight",         "is_done": false, "category_id": 7 },
+  { "title": "Create packing checklist",            "is_done": false, "category_id": 7 },
+
+  { "title": "Update monthly budget sheet",         "is_done": true,  "category_id": 8 },
+  { "title": "Review bank account statements",      "is_done": false, "category_id": 8 },
+
+  { "title": "Practice guitar for 30 minutes",      "is_done": false, "category_id": 9 },
+  { "title": "Finish drawing new artwork",          "is_done": true,  "category_id": 9 },
+
+  { "title": "Implement feature login screen",      "is_done": false, "category_id": 10 },
+  { "title": "Test notification system",            "is_done": false, "category_id": 10 },
+
+  { "title": "Call grandparents",                   "is_done": true,  "category_id": 11 },
+  { "title": "Plan weekend family dinner",          "is_done": false, "category_id": 11 },
+
+  { "title": "Backup phone data",                   "is_done": false, "category_id": 12 }
+]
