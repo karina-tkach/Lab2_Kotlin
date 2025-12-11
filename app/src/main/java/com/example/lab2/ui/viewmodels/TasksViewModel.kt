@@ -5,20 +5,31 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.lab2.database.AppDatabase
+import com.example.lab2.MyApp
 import com.example.lab2.model.Category
 import com.example.lab2.model.Task
-import com.example.lab2.repository.TaskRepository
+import com.example.lab2.repository.toEntity
 import kotlinx.coroutines.launch
 
 class TasksViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = TaskRepository(AppDatabase.getDatabase(application).appDao())
+    private val repository = (application as MyApp).taskRepository
 
     private val _categories = MutableLiveData<List<Category>>(emptyList())
     val categories: LiveData<List<Category>> = _categories
 
     private val _tasks = MutableLiveData<List<Task>>(emptyList())
     val tasks: LiveData<List<Task>> = _tasks
+
+    fun loadAllDataToDb() {
+        viewModelScope.launch {
+            val tasksFromApi = repository.loadTasksFromApi()
+            val categoriesFromApi = repository.loadCategoriesFromApi()
+            repository.insertCategories(categoriesFromApi.map { it.toEntity() })
+            repository.insertTasks(tasksFromApi.map { it.toEntity() })
+            loadCategories()
+            loadTasks()
+        }
+    }
 
     fun loadCategories() {
         viewModelScope.launch {

@@ -1,5 +1,6 @@
 package com.example.lab2.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -18,7 +20,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -44,6 +45,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -52,7 +54,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
+import com.example.lab2.model.Ad
 import com.example.lab2.model.AppearanceOption
+import com.example.lab2.model.ListItem
+import com.example.lab2.repository.AppearanceRepository
 import com.example.lab2.ui.viewmodels.AppearanceOptionsViewModel
 
 
@@ -147,18 +153,33 @@ fun SettingsMainScreen(onNext: () -> Unit) {
     }
 }
 
+
 @Composable
 fun SettingsAppearanceOptionsScreen(onNext: () -> Unit, onPrev: () -> Unit,
                                     viewModel: AppearanceOptionsViewModel = viewModel()) {
 
-    val appearanceOptions by viewModel.appearanceOptions.observeAsState(emptyList())
+    //val appearanceOptions by viewModel.appearanceOptions.observeAsState(emptyList())
     val showFull by viewModel.showFullList.observeAsState(false)
     val scrollState = rememberScrollState()
+
+    val appearanceOptions = AppearanceRepository().getAppearanceOptions()
+    val ads: List<Ad> = List(10) {
+        Ad("https://www.mcso.us/sites/default/files/styles/portrait_tall_xs/public/2024-02/cold%20case%20john%20doe.png.webp?itok=FaIf6NJ5")
+    }
+    val unifiedList = buildList {
+        for (i in appearanceOptions.indices) {
+            add(appearanceOptions[i])
+            if (i < ads.size) {
+                add(ads[i])
+            }
+        }
+    }
+
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            //.verticalScroll(scrollState)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
@@ -222,19 +243,55 @@ fun SettingsAppearanceOptionsScreen(onNext: () -> Unit, onPrev: () -> Unit,
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (appearanceOptions.isEmpty()) {
+        if (unifiedList.isEmpty()) {
             Text("No options available.", modifier = Modifier.padding(16.dp))
         } else {
-            val listToShow = if (showFull) appearanceOptions else appearanceOptions.take(3)
+            val listToShow = if (showFull) unifiedList else unifiedList.take(3)
 
-            LazyRow(
+            val uiItems = listOf<@Composable () -> Unit>(
+                { RowSlider(listToShow) },
+                { ColumnOpt(appearanceOptions) }
+            )
+            LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(listToShow) { option ->
-                    OptionItem(option)
+                items(
+                    items = uiItems,
+                ) { item ->
+                    item()
                 }
             }
+
+        }
+    }
+}
+
+@Composable
+fun RowSlider(list: List<ListItem>) {
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(
+            items = list,
+        ) { item ->
+            when (item) {
+                is AppearanceOption -> OptionItem(item)
+                is Ad -> AdItem(item)
+            }
+        }
+    }
+}
+
+@Composable
+fun ColumnOpt(list: List<AppearanceOption>) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        list.forEach { item ->
+            OptionItem(item)
         }
     }
 }
@@ -253,6 +310,27 @@ fun OptionItem(option: AppearanceOption) {
             Text(
                 option.description,
                 maxLines = 1
+            )
+        }
+    }
+}
+
+@Composable
+fun AdItem(ad: Ad) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Image(
+                painter = rememberAsyncImagePainter(ad.imageUrl),
+                contentDescription = "Profile Photo",
+                modifier = Modifier
+                    .size(50.dp)
+                    .padding(bottom = 16.dp),
+                contentScale = ContentScale.Crop
             )
         }
     }

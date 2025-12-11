@@ -23,6 +23,9 @@ interface AppDao {
     @Insert
     suspend fun insertTask(task: TaskEntity)
 
+    @Insert
+    suspend fun insertAllTasks(vararg tasks: TaskEntity)
+
     @Update
     suspend fun updateTask(task: TaskEntity)
 
@@ -42,6 +45,11 @@ interface AppDao {
         onConflict = OnConflictStrategy.REPLACE
     )
     suspend fun insertCategory(category: CategoryEntity)
+
+    @Insert(
+        onConflict = OnConflictStrategy.REPLACE
+    )
+    suspend fun insertAllCategories(categories: List<CategoryEntity>)
 
     @Delete
     suspend fun deleteCategory(category: CategoryEntity)

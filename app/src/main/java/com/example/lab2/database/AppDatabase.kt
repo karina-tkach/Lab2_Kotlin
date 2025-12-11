@@ -29,7 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database.db"
-                ).addCallback(PrepopulateRoomCallback(context)).build().also { INSTANCE = it }
+                )/*.addCallback(PrepopulateRoomCallback(context))*/.build().also { INSTANCE = it }
             }
         }
     }

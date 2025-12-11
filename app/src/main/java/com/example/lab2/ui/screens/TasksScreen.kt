@@ -68,8 +68,7 @@ fun TasksScreen(
     val navController = rememberNavController()
 
     LaunchedEffect(Unit) {
-        viewModel.loadCategories()
-        viewModel.loadTasks()
+        viewModel.loadAllDataToDb()
     }
 
     NavHost(
